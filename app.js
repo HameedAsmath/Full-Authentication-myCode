@@ -25,7 +25,7 @@ app.post("/register", async(req,res)=>{
         const {firstname, lastname, email, password, token} = req.body
         if(!(firstname && lastname && email && password)){
             return res.status(401).send("All fields are required")
-        }
+         }
 
         //checking if the user already exist
         const exstUser = await User.findOne({email})

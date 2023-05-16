@@ -4,14 +4,10 @@ const {
   register,
   login,
   logout,
-  dashboard,
-  home
+  userdetails,
 } = require("../controllers/userControllers");
 const router = express.Router();
 const auth = require("../middleware/auth")
-
-//Home route
-router.get("/",home)
 
 //Register route
 router.post("/register", register);
@@ -22,7 +18,7 @@ router.post("/login", login);
 //logout
 router.get("/logout", logout)
 
-//dashboard route
-router.get("/dashboard",auth, dashboard);
+//userdetailsroute
+router.post("/userdetails", userdetails);
 
 module.exports = router;

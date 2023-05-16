@@ -3,14 +3,10 @@ const User = require("../model/user");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 
-exports.home = (req, res) => {
-  res.send("Hello World");
-};
-
 exports.register = async (req, res) => {
   try {
-    const { firstname, lastname, email, password, token } = req.body;
-    if (!(firstname && lastname && email && password)) {
+    const { name, email, password} = req.body;
+    if (!(name && email && password)) {
       return res.status(401).send("All fields are required");
     }
 
@@ -25,8 +21,7 @@ exports.register = async (req, res) => {
 
     //Create new entry
     const user = await User.create({
-      firstname,
-      lastname,
+      name,
       email,
       password: encryptedpassword,
     });
@@ -45,17 +40,14 @@ exports.register = async (req, res) => {
 
     //dont want to send this to the user
     user.password = undefined;
-    console.log(user);
     res.status(201).json(user);
   } catch (error) {
     console.log(error);
-    console.log("Something went wrong");
   }
 };
 
 exports.login = async (req, res) => {
   try {
-    console.log(req.body);
     const { email, password } = req.body;
     if (!(email && password)) {
       return res.status(401).send("All fields are required");
@@ -83,7 +75,7 @@ exports.login = async (req, res) => {
         expires: new Date(Date.now() + 3 * 24 * 60 * 60 * 1000),
         httpOnly: true,
       };
-      res.status(201).cookie("token", token, option).json({
+      res.status(200).cookie("token", token, option).json({
         success: true,
         token,
         user,
@@ -104,6 +96,24 @@ exports.logout = (req, res) => {
   res.status(200).send({ message: "Logged out successfully" });
 };
 
-exports.dashboard = (req, res) => {
-  res.send("dashboard");
+exports.userdetails = (req,res) => {
+  const {token} = req.body
+  try {
+      if(!token){
+          res.status(403).send("token is missing")
+      }
+      const decode = jwt.verify(token,"mysecretkey",(err,res)=>{
+        if(err){
+          return "Token Expired"
+        }
+        return res
+      })
+      if(decode==="Token Expired"){
+        return res.status(401).send("Token Expired")
+      }
+      res.status(200).json({decode})
+      console.log(decode)
+  } catch (error) {
+      res.status(403).send("Invalid token")
+  }
 };

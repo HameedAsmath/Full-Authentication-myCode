@@ -7,7 +7,8 @@ const auth = (req,res,next)=>{
             res.status(403).send("token is missing")
         }
         const decode = jwt.verify(token,"mysecretkey")
-        req.user = decode
+        req.user(decode)
+        console.log(req)
     } catch (error) {
         res.status(403).send("Invalid token")
     }

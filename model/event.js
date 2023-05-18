@@ -12,5 +12,11 @@ const eventSchema = new mongoose.Schema({
         type: String,
         unique: true
     },
+    heading:{
+        type: String,
+    },
+    description:{
+        type: String,
+    }
 },{timestamps: true})
 module.exports = mongoose.model("event",eventSchema)

@@ -16,7 +16,7 @@ router.post("/register", register);
 router.post("/login", login);
 
 //logout
-router.get("/logout", logout)
+router.get("/logout", logout) 
 
 //userdetailsroute
 router.post("/userdetails", userdetails);
